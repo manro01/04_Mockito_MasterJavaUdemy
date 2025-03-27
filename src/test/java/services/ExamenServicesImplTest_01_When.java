@@ -1,5 +1,5 @@
 /**
- * Primer ejemplo de uso de Mockito.
+ * Primer ejemplo de uso de Mockito. y uso del método when de mockito
  * Un mock es un objeto que va a tomar el lugar de un objeto que necesitemos para 
  * la prueba. por ejemplo en este caso, cuando se necesite un objeto de ExamenRepository
  * va a entrar un mock que se va a comportar como una implementación de ExamenRepository,
@@ -8,9 +8,13 @@
  * aplicación real) NO se usa esa clase y se usa el mock.
  * Nosotros "configuramos" el mock para que se comporte como nosotros queramos
  * 
- * RECUERA que los mock son una simulación de datos obtenidos de una fuente externa por ejemplo si queremos usar
+ * RECUERDA que los mock son una simulación de datos obtenidos de una fuente externa por ejemplo si queremos usar
  * examenes que se crean en un servicio externo, simulamos los mock con el objeto que recibiriamos de ese
  * servicio externo.
+ * 
+ * EL method WHEN sirve para configurar que se debe obtenet cuando se haga una petición a un repositorio, 
+ *  por ejemplo  when(repository.findAll()).thenReturn(Datos.EXAMENES); indica que cuando en el repositorio (repository)
+ *  se use el métod findAll(). se regrese Datos.EXAMENES
  * 
  * No sepueden hacer mocks de clases privadas, estaticas o final, tienen que ser publicas.
  */
@@ -29,7 +33,7 @@ import repositories.ExamenRepository;
 import repositories.PreguntaRepository;
 
 
-public class ExamenServicesImplTest
+public class ExamenServicesImplTest_01_When
 {
     
     ExamenRepository repository;
@@ -145,11 +149,20 @@ public class ExamenServicesImplTest
         // los examenes con su id, por eso sabemos que existe un examen con el id 5
         when(preguntaRepository.findPreguntaPorExamen(5L)).thenReturn(Datos.PREGUNTAS);
         
+        //******* NOTA  ****************************************
+        //en la linea de arriba se especifico que el id debia ser 5, pero podemos decir que sea para cualquier Long con anyLong
+        //es decir que cualquier findPreguntaPorExamen(5L), donde se pare un Long, va a regresar Datos.PREGUNTAS, por ahora
+        //no se va a usar pero si queda como ejemplo.
+        //when(preguntaRepository.findPreguntaPorExamen(anyLong())).thenReturn(Datos.PREGUNTAS);
+        
         //En el test setup se creo un objeto 
         Examen examen= service.findExamenPorNombreConPreguntas("Matematicas");
         
         //esperamos que el examen tenga 5 preguntas
         assertEquals(5, examen.getPreguntas().size());
+        
+        //esperamos que alguna de las preguntas del examen sea, aritmetica
+        assertTrue(examen.getPreguntas().contains("aritmética"));
         
         /**
          * cuando hacemos examen= service.findExamenPorNombreConPreguntas("Matematicas"); 
