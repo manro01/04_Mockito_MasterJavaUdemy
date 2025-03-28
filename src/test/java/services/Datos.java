@@ -23,4 +23,8 @@ public class Datos
                 , "trigonometría", "geometría");
     
     public final static Examen EXAMEN= new Examen(8L, "fisíca");
+    
+    //este método no lo puso el maestro lo puse, yo porque el edito el de arriba EXAMEN para
+    // hacer el id autoincrementable, pero to preferi dejarlo y hacer otro.
+    public final static Examen EXAMEN_SIN_ID= new Examen(null, "Programación");
 }
