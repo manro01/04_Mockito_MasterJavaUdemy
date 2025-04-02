@@ -8,6 +8,18 @@
  * Anser() sirve para hacer llamada al objeto que ya se uso, hata ahora habiamos visto
  *  que usando el when podriamos configurar un comportatmiento, para que se obtenga una respuesta
  *  que nosotros queremos pero con Answer() podemos inetractuar con esa respueta
+ * 
+ * ////////// Dsarrollo impulsado al comportamiento BDD (beheaviour development driven)
+ * 
+ * Es una metodología para realizar las prubas
+ * Tiene relación directa con el testing, pues el BDD surge directamente del TDD o desarrollo 
+ * guiado por pruebas. Pero a diferencia del TDD, el BDD define las pruebas centradas 
+ * en el usuario y el comportamiento del sistema y no en las funcionalidades de este. 
+ * En otras palabras, el BDD describe las pruebas en un lenguaje natural que entienden 
+ * todos los equipos de un proyecto, y no únicamente los programadores.
+ * 
+ * Realmente no dio una explicación de esto, solamente puso los comentarios, yo buesque 
+ * la definición.
  */
 package services;
 
@@ -31,9 +43,9 @@ import repositories.PreguntaRepository;
 
 
 @ExtendWith(MockitoExtension.class)         
-public class ExamenServicesImplTest_05_Autorepuesta
+public class ExamenServicesImplTest_05_AutorepuestaYBdd
 {
-    
+    //BDD estos tres serían parte también del Given
     @Mock
     ExamenRepository repository;               
     @Mock
@@ -52,6 +64,7 @@ public class ExamenServicesImplTest_05_Autorepuesta
     @BeforeEach
     void setup()
     {
+        //BDD Si usara algo aquí, tambien sería parte del Given
         //MockitoAnnotations.openMocks(this);  //esto es para habilitar el uso de inyeccion de dependencias y etiquetas
         //creo que este ya no se necesita por que ya se activo con @ExtendWith(MockitoExtension.class) 
 
@@ -181,10 +194,16 @@ public class ExamenServicesImplTest_05_Autorepuesta
     @Test
     void testCompruebaGuardadExamenConAutoId()
     {
+        //BDD Given son las precondiciones en el entorno de prueba
+        //Con esto guadamos las preguntas en un examen temporal, para luego crear el objeto examen a guardar con estas preguntas
+        Examen newExam= Datos.EXAMEN;
+        newExam.setPreguntas(Datos.PREGUNTAS);
+        
+        
         //se cambio el thenReturn por then que es que se usa en estos casos
         when(repository.guardar(any(Examen.class))).then(new Answer<Examen>() 
         {
-            Long secuencia= 9L; //se va iniciar desde 9 porque en Datos ya habiamos usado del 5 al 8
+            Long secuencia= 8L; //se va iniciar desde 9 porque en Datos ya habiamos usado del 5 al 8
             
             //InvocationOnMock nos invoca al mock con el que guardamos el exeman, recuerda qye arriba ya se guardo el examen
             @Override
@@ -196,7 +215,8 @@ public class ExamenServicesImplTest_05_Autorepuesta
             }
         });
         
-        Examen examen= service.guardar(Datos.EXAMEN);
+        //BDD When, es cuando se ejecuta el método de prueba
+        Examen examen= service.guardar(newExam); //le asignamos el examen con preguntas al examen que se va a guradar
         
         //revisa que el examen no sea nulo
         assertNotNull(examen.getId());
